@@ -20,15 +20,42 @@ class Store extends CI_Controller {
     }
 
     function index() {
-    		$this->load->model('product_model');
-    		$products = $this->product_model->getAll();
-    		$data['products']=$products;
-    		$this->load->view('product/list.php',$data);
+    		$this->loadAdministratorPage();
+    }
+    
+    function loadAdministratorPage(){
+    	$this->load->view('adminFirstPage.php');
+    }
+    
+    function loadMainPage(){
+    	
+    }
+    
+    function loadProductAdmin(){
+    	$this->load->model('product_model');
+    	$products = $this->product_model->getAll();
+    	$data['products']=$products;
+    	$this->load->view('product/list.php',$data);
+    }
+    
+    function loadCustomerAdmin(){
+    	$this->load->model('customer_model');
+    	$customers = $this->customer_model->getAll();
+    	$data['customers']=$customers;
+    	$this->load->view('customer/list.php',$data);
+    }
+    
+    function loadOrderAdmin(){
+    	$this->load->model('order_model');
+    	$orders = $this->order_model->getAll();
+    	$data['orders']=$orders;
+    	$this->load->view('order/list.php',$data);
     }
     
     function newForm() {
 	    	$this->load->view('product/newForm.php');
     }
+    
     
 	function create() {
 		$this->load->library('form_validation');
@@ -114,6 +141,16 @@ class Store extends CI_Controller {
 		if (isset($id)) 
 			$this->product_model->delete($id);
 		
+		//Then we redirect to the index page again
+		redirect('store/index', 'refresh');
+	}
+	
+	function deleteCustomer($id) {
+		$this->load->model('customer_model');
+	
+		if (isset($id))
+			$this->customer_model->delete($id);
+	
 		//Then we redirect to the index page again
 		redirect('store/index', 'refresh');
 	}
