@@ -1,6 +1,6 @@
 <h2>Order Table</h2>
 <?php 
-		echo "<p>" . anchor('store/index','Back') . "</p>";
+		echo "<p>" . anchor('store/loadAdministratorPage','Back') . "</p>";
  	  
 		echo "<table>";
 		echo "<tr><th>Customer</th><th>Date</th><th>Time</th><th>Total</th><th>Items</th></tr>";

@@ -20,15 +20,22 @@ class Store extends CI_Controller {
     }
 
     function index() {
-    		$this->loadAdministratorPage();
+    		$this->loadMainPage();
     }
     
     function loadAdministratorPage(){
     	$this->load->view('adminFirstPage.php');
     }
     
+    function loadCart(){
+    	$this->load->view('cart/myCart.php');
+    }
+    
     function loadMainPage(){
-    	
+    	$this->load->model('product_model');
+    	$products = $this->product_model->getAll();
+    	$data['products']=$products;
+    	$this->load->view('main_page/main.php',$data);
     }
     
     function loadProductAdmin(){
