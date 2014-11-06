@@ -66,19 +66,24 @@ class Store extends CI_Controller {
     	//Also we are going to need the dog model
     	$this->load->model('product_model');
     	$product = $this->product_model->get($id);    	
-    	//$this->load->model('item');
-    	//$item = new Item();
-    	//$item->id = $id;
-    	//$item->id = $product->id;
-    	//$item->name = $product->name;
-    	//$item->photo_url = $product->photo_url;
-    	//$item->price = $product->price;
-    	//$item->quantity = 1;
-    	 
-    	if (isset($_SESSION["items"])==false)
+    	$this->load->model('item');
+    	$item = new Item();
+    	$item->product_id = $product->id;
+    	$item->name = $product->name;
+    	$item->photo_url = $product->photo_url;
+    	$item->price = $product->price;
+    	$item->quantity = 1;
+    	$isInTheCart = false; 
+    	if (isset($_SESSION["items"])==false){
     		$_SESSION["items"] = array();
-    	
-    	$_SESSION["items"][] = $product;
+    	}else{
+    		foreach($_SESSION['items'] as $k => $v) {
+    			if($v->product_id == $product->id )
+    				$isInTheCart=true;
+    		}
+    	}
+    	if(!$isInTheCart)
+    		$_SESSION["items"][] = $item;
     	 
     	//Then we redirect to the index page again
     	redirect('store/loadCart', 'refresh');
@@ -97,14 +102,33 @@ class Store extends CI_Controller {
     }
     
     function cleanCart(){
-    	if (isset($_SESSION["items"])) {
+    	if (isset($_SESSION['items'])) {
     		unset($_SESSION['items']);
     		redirect('store/loadCart', 'refresh');
     	}
     }
     
-    function deleteItemFromSession($id){
-    	
+    function deleteItemFromSession($product_id){
+    	foreach($_SESSION['items'] as $k => $v) {
+    		if($v->product_id == $product_id)
+    			unset($_SESSION['items'][$k]);
+    	}
+    	redirect('store/loadCart', 'refresh');
+    }
+    
+    function increaseProductQuantity($product_id){
+    	foreach($_SESSION['items'] as $k => $v) {
+    		if($v->product_id == $product_id)
+    			$v->quantity = $v->quantity+1;
+    	}
+    	redirect('store/loadCart', 'refresh');
+    }
+    function decreaseProductQuantity($product_id){
+    	foreach($_SESSION['items'] as $k => $v) {
+    		if($v->product_id == $product_id && $v->quantity > 1 )
+    			$v->quantity = $v->quantity-1;
+    	}
+    	redirect('store/loadCart', 'refresh');
     }
     
     function checkout(){
@@ -113,26 +137,27 @@ class Store extends CI_Controller {
     
     function checkCreditCard() {
     	$this->load->library('form_validation');
-    	$this->form_validation->set_rules('credit_number','Credit Card Number','required');
-    	$this->form_validation->set_rules('credit_month','Credit Card Month','required');
-    	$this->form_validation->set_rules('credit_year','Credit Card Year','required');
+    	$this->form_validation->set_rules('creditcard_number','Credit Card Number','required');
+    	$this->form_validation->set_rules('creditcard_month','Credit Card Month','required');
+    	$this->form_validation->set_rules('creditcard_year','Credit Card Year','required');
     
     	if ($this->form_validation->run() == true) {
     		$this->load->model('order_model');
     
     		$order = new Order();
-    		$order->order_date = date('Y/m/d');
+    		$order->order_date = date('Y-m-d');
     		$order->order_time = date('H:i:s');
-    		$order->creditcard_number = $this->input->get_post('credit_number');
-    		$order->creditcard_month = $this->input->get_post('credit_month');
-    		$order->creditcard_month = $this->input->get_post('credit_number');  
+    		$order->customer_id = 1;
+    		$order->total = 150;
+    		$order->creditcard_number = $this->input->get_post('creditcard_number');
+    		$order->creditcard_month = $this->input->get_post('creditcard_month');
+    		$order->creditcard_month = $this->input->get_post('creditcard_year');  
     		  			
     		$this->order_model->insert($order);
     		redirect('store/concluded', 'refresh');
     	}
     	else {    			
-    		//$this->load->view('payment/form.php');
-    		redirect('store/loadMainPage', 'refresh');
+    		$this->load->view('payment/form.php');
     	}
     }
     

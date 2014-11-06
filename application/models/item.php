@@ -1,9 +1,11 @@
 <?php
 class Item extends CI_Model{
 	public $id;
-	public $name;
-	public $price;
-	public $photo_url;
+	public $order_id;
+	public $product_id;
 	public $quantity;
+	public $name;
+	public $photo_url;
+	public $price;
 }
 ?>
