@@ -6,7 +6,7 @@
 </style>
 
 <?php 
-	echo "<p>" . anchor('store/index','Back') . "</p>";
+	echo "<p>" . anchor('store/loadProductAdmin','Back') . "</p>";
 	
 	echo form_open_multipart('store/create');
 		

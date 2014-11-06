@@ -11,7 +11,7 @@
 			echo "<td>" . $order->order_date . "</td>";
 			echo "<td>" . $order->order_time . "</td>";
 			echo "<td>" . $order->total . "</td>";
-			echo "<td>" . $order->items . "</td>";
+			//echo "<td>" . $order->items . "</td>";
 							
 			echo "<td>" . anchor("store/deleteOrder/$order->id",'Delete',"onClick='return confirm(\"Do you really want to delete this record?\");'") . "</td>";
 			echo "</tr>";

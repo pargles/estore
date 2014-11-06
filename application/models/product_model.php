@@ -5,7 +5,7 @@ class Product_model extends CI_Model {
 	{  
 		$query = $this->db->get('products');
 		return $query->result('Product');
-	}  
+	}
 	
 	function get($id)
 	{

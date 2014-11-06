@@ -16,6 +16,8 @@ class Store extends CI_Controller {
 */
 	    		    	
 	    	$this->load->library('upload', $config);
+	    	//include 'models/item.php';
+	    	session_start();
 	    	
     }
 
@@ -25,10 +27,6 @@ class Store extends CI_Controller {
     
     function loadAdministratorPage(){
     	$this->load->view('adminFirstPage.php');
-    }
-    
-    function loadCart(){
-    	$this->load->view('cart/myCart.php');
     }
     
     function loadMainPage(){
@@ -63,6 +61,89 @@ class Store extends CI_Controller {
 	    	$this->load->view('product/newForm.php');
     }
     
+    function buyItem($id){
+    	//$this->loadCart();
+    	//Also we are going to need the dog model
+    	$this->load->model('product_model');
+    	$product = $this->product_model->get($id);    	
+    	//$this->load->model('item');
+    	//$item = new Item();
+    	//$item->id = $id;
+    	//$item->id = $product->id;
+    	//$item->name = $product->name;
+    	//$item->photo_url = $product->photo_url;
+    	//$item->price = $product->price;
+    	//$item->quantity = 1;
+    	 
+    	if (isset($_SESSION["items"])==false)
+    		$_SESSION["items"] = array();
+    	
+    	$_SESSION["items"][] = $product;
+    	 
+    	//Then we redirect to the index page again
+    	redirect('store/loadCart', 'refresh');
+    }
+    
+    function loadCart(){
+    	//$this->load->view('cart/myCart.php');
+    	if (isset($_SESSION["items"])) {
+    		$somedata['automaticitemsvariable']= $_SESSION["items"];
+    		//$somedata['msg']= "hello world";
+    		$this->load->view('cart/myCart',$somedata);
+    	}
+    	else{
+    		$this->load->view('cart/myCart',array());
+    	}
+    }
+    
+    function cleanCart(){
+    	if (isset($_SESSION["items"])) {
+    		unset($_SESSION['items']);
+    		redirect('store/loadCart', 'refresh');
+    	}
+    }
+    
+    function deleteItemFromSession($id){
+    	
+    }
+    
+    function checkout(){
+    	$this->load->view('payment/form.php');
+    }
+    
+    function checkCreditCard() {
+    	$this->load->library('form_validation');
+    	$this->form_validation->set_rules('credit_number','Credit Card Number','required');
+    	$this->form_validation->set_rules('credit_month','Credit Card Month','required');
+    	$this->form_validation->set_rules('credit_year','Credit Card Year','required');
+    
+    	if ($this->form_validation->run() == true) {
+    		$this->load->model('order_model');
+    
+    		$order = new Order();
+    		$order->order_date = date('Y/m/d');
+    		$order->order_time = date('H:i:s');
+    		$order->creditcard_number = $this->input->get_post('credit_number');
+    		$order->creditcard_month = $this->input->get_post('credit_month');
+    		$order->creditcard_month = $this->input->get_post('credit_number');  
+    		  			
+    		$this->order_model->insert($order);
+    		redirect('store/concluded', 'refresh');
+    	}
+    	else {    			
+    		//$this->load->view('payment/form.php');
+    		redirect('store/loadMainPage', 'refresh');
+    	}
+    }
+    
+    function concluded(){
+    	$this->load->view('payment/thanks.php');
+    	//send email here
+    }
+    
+    function printReceipt(){
+    	
+    }
     
 	function create() {
 		$this->load->library('form_validation');
