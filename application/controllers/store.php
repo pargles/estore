@@ -16,7 +16,16 @@ class Store extends CI_Controller {
 */
 	    		    	
 	    	$this->load->library('upload', $config);
-	    	//include 'models/item.php';
+	    	$config['protocol']='smtp';
+	    	$config['smtp_host']='ssl://smtp.googlemail.com';
+	    	$config['smtp_port']=465;
+	    	$config['smtp_user']='md5destroyer@gmail.com';
+	    	$config['smtp_pass']='achoqueabarradeespacoquebrou';
+	    	$config['mailtype']='html';
+	    	$config['charset']='iso-8859-1';
+	    	$this->load->library('email', $config);
+	    	$this->load->helper('file');
+	    	$this->email->set_newline("\r\n");
 	    	session_start();
 	    	
     }
@@ -137,33 +146,90 @@ class Store extends CI_Controller {
     
     function checkCreditCard() {
     	$this->load->library('form_validation');
-    	$this->form_validation->set_rules('creditcard_number','Credit Card Number','required');
-    	$this->form_validation->set_rules('creditcard_month','Credit Card Month','required');
-    	$this->form_validation->set_rules('creditcard_year','Credit Card Year','required');
+    	$this->form_validation->set_rules('creditcard_number','Credit Card Number','required|exact_length[16]|numeric');
+    	$this->form_validation->set_rules('creditcard_month','Credit Card Month','required|exact_length[2]|numeric|callback_month_check');
+    	$this->form_validation->set_rules('creditcard_year','Credit Card Year','required|exact_length[4]|numeric|callback_year_check');
     
     	if ($this->form_validation->run() == true) {
     		$this->load->model('order_model');
-    
+    		$this->load->model('item_model');
     		$order = new Order();
+    		//http://php.net/manual/en/function.date.php
     		$order->order_date = date('Y-m-d');
     		$order->order_time = date('H:i:s');
-    		$order->customer_id = 1;
-    		$order->total = 150;
+    		$order->customer_id = 4;
+    		$total = 0;
+    		foreach($_SESSION['items'] as $k => $v) {
+    			$total = $total + $v->price;
+    		}
+    		$order->total = $total;
     		$order->creditcard_number = $this->input->get_post('creditcard_number');
     		$order->creditcard_month = $this->input->get_post('creditcard_month');
-    		$order->creditcard_month = $this->input->get_post('creditcard_year');  
-    		  			
+    		$order->creditcard_year = $this->input->get_post('creditcard_year');  
     		$this->order_model->insert($order);
-    		redirect('store/concluded', 'refresh');
+    		$orderIdentification =  $this->order_model->insert($order);
+    		
+    		foreach($_SESSION['items'] as $k => $current_item) {
+    			$current_item->order_id = $orderIdentification;
+    			$this->item_model->insert($current_item);
+    		}
+    		redirect('store/email', 'refresh');
     	}
     	else {    			
     		$this->load->view('payment/form.php');
     	}
     }
     
-    function concluded(){
+    public function month_check($creditcard_month) {
+    	if ($creditcard_month < date('m') ){
+    		$this->form_validation->set_message('month_check', 'Your credit card has expired');
+    		return false;
+    	}
+    	return true;
+    }
+    
+    public function year_check($creditcard_year) {
+    	if ($creditcard_year < date('Y') ){
+    		$this->form_validation->set_message('year_check', 'Your credit card has expired');
+    		return false;
+    	}
+    	return true;
+    }
+    
+    function email(){
+    	//sendEmail()
+    	$this->email->from('md5destroyer@gmail.com', 'Baseball online store');
+    	$this->email->to('pargles1@gmail.com');
+    	$this->email->subject('Your BestCards order confirmation');
+    	$client = "Abias Corpus";
+    	$messageHeader = 'Hello '.$client.' <p> Thank you for shopping with us. The following products will be shipped shortly to your address. <br>';
+    	$messageBody = '<table>';
+    	$messageBottom = '<br>We hope to see you again soon! <br> BestCards';
+    	$emailbody='';
+    	/*
+    	foreach($_SESSION['items'] as $k => $current_item) {
+    		//$imagePath = base_url() . 'images/product/' . $current_item->photo_url;
+    		//$fileExt = get_mime_by_extension($imagePath); //  get the mime type
+    		//$messageBody .= '<tr><td><img src="data:'.$fileExt.';base64,'.base64_encode(file_get_contents($imagePath)).'"></td><td>'.$current_item->price.'</td></tr>';
+    		$emailbody = $this->load->view('produt/list.php',$data);
+    	}*/
+    	if (isset($_SESSION["items"])) {
+    		$somedata['automaticitemsvariable']= $_SESSION["items"];
+    		//$somedata['msg']= "hello world";
+    		$emailbody = $this->load->view('email/emailLayout',$somedata,true);
+    	}
+    	$messageBody .= '</table>';
+    	//$this->email->message($messageHeader.$messageBody.$messageBottom);	
+    	$this->email->message($emailbody);
+    	if($this->email->send())
+     	{
+      		echo 'Email sent.';
+     	}else{
+     		show_error($this->email->print_debugger());
+    	}
+    	//echo $this->email->print_debugger();
+    	//unset($_SESSION['items']);
     	$this->load->view('payment/thanks.php');
-    	//send email here
     }
     
     function printReceipt(){
