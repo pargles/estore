@@ -199,6 +199,7 @@ class Store extends CI_Controller {
     function email(){
     	//sendEmail()
     	$this->email->from('md5destroyer@gmail.com', 'Baseball online store');
+    	//$this->email->to('pvitor.93@gmail.com');
     	$this->email->to('pargles1@gmail.com');
     	$this->email->subject('Your BestCards order confirmation');
     	$client = "Abias Corpus";
