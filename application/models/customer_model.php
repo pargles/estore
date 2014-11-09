@@ -17,10 +17,10 @@ class Customer_model extends CI_Model {
 	}
 	
 	function insert($customer) {
-		return $this->db->insert("customers", array('first' => $custormer->first,
-				                                  'last' => $custormer->last,
-											      'login' => $custormer->login,
-												  'password' => $custormer->password,
+		return $this->db->insert("customers", array('first' => $customer->first,
+				                                  'last' => $customer->last,
+											      'login' => $customer->login,
+												  'password' => $customer->password,
 												  'email'=> $customer->email));
 	}	
 }

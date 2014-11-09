@@ -25,7 +25,7 @@
 <h2>Create a new account</h2>
 
 <?php 
-	echo form_open_multipart('store/loadCustomerAdmin');
+	echo form_open_multipart('store/createSinginForm');
 
 	echo form_label('First Name');
 	echo form_error('first');

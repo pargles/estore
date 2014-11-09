@@ -56,6 +56,7 @@ class Store extends CI_Controller {
     }
     
     function createSinginForm(){	
+    	$this->load->model('customer_model');
     	$this->load->library('form_validation');
 		$this->form_validation->set_rules('first','First','required');
 		$this->form_validation->set_rules('last','Last','required');
@@ -65,35 +66,26 @@ class Store extends CI_Controller {
 		
 		$fileUploadSuccess = $this->upload->do_upload();
 		
-		//if ($this->form_validation->run() == true && $fileUploadSuccess) {
-		//	$this->load->model('customer_model');
+		if ($this->form_validation->run() == true) {
 
-			$customer = new Customer();
-			$customer->first = $this->input->get_post('first');
-			$customer->last = $this->input->get_post('last');
-			$customer->login = $this->input->get_post('login');
-			$customer->password = $this->input->get_post('password');
-			$customer->email = $this->input->get_post('email');
+			$customers = new Customer();
+			$customers->first = $this->input->get_post('first');
+			$customers->last = $this->input->get_post('last');
+			$customers->login = $this->input->get_post('login');
+			$customers->password = $this->input->get_post('password');
+			$customers->email = $this->input->get_post('email');
 			
 		    $data = $this->upload->data();
 		
-			
-			$this->customer_model->insert($customer);
+			$this->customer_model->insert($customers);
 
 			//Then we redirect to the index page again
-			redirect('store/index', 'refresh');
-		/*}
-		else {
+			//redirect('store/index', 'refresh');
 			$this->load->view('customer/list.php');
-			if ( !$fileUploadSuccess) {
-				$data['fileerror'] = $this->upload->display_errors();
-				$this->load->view('login/newForm.php',$data);
-				return;
-			}
-			
-			
+		}
+		else {
+			redirect('store/index', 'refresh');
 		}	
-		*/
 	}
 	
     	/*
