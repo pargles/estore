@@ -25,25 +25,25 @@
 <h2>Create a new account</h2>
 
 <?php 
-	echo form_open_multipart('store/createSiginForm');
+	echo form_open_multipart('store/loadCustomerAdmin');
 
 	echo form_label('First Name');
 	echo form_error('first');
 	echo form_input('first',set_value('first'),"required");		
 	
 	echo form_label('Last Name');
-	echo form_input('last',set_value('last'));
+	echo form_error('last');
+	echo form_input('last', set_value('last'),"required");
 	
 	echo form_label('Login');
 	echo form_error('login');
 	echo form_input('login',set_value('login'),"required");
-	
-	
-	echo form_label('Login'); 
-	echo form_error('login');
-	echo form_input('login',set_value('login'),"required");
 
 	echo form_label('Password');
+	echo form_error('password');
+	echo form_input('password',set_value('password'),"required");
+	
+	echo form_label('Repeat Password');
 	echo form_error('password');
 	echo form_input('password',set_value('password'),"required");
 	

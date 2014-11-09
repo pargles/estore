@@ -51,6 +51,68 @@ class Store extends CI_Controller {
     	$data['products']=$products;
     	$this->load->view('product/list.php',$data);
     }
+        function createLoginForm(){
+    	$this->load->view('login/newForm.php');
+    }
+    
+    function createSinginForm(){	
+    	$this->load->library('form_validation');
+		$this->form_validation->set_rules('first','First','required');
+		$this->form_validation->set_rules('last','Last','required');
+		$this->form_validation->set_rules('login','Login','required');
+		$this->form_validation->set_rules('password','Password','required');
+		$this->form_validation->set_rules('email','Email','required');
+		
+		$fileUploadSuccess = $this->upload->do_upload();
+		
+		//if ($this->form_validation->run() == true && $fileUploadSuccess) {
+		//	$this->load->model('customer_model');
+
+			$customer = new Customer();
+			$customer->first = $this->input->get_post('first');
+			$customer->last = $this->input->get_post('last');
+			$customer->login = $this->input->get_post('login');
+			$customer->password = $this->input->get_post('password');
+			$customer->email = $this->input->get_post('email');
+			
+		    $data = $this->upload->data();
+		
+			
+			$this->customer_model->insert($customer);
+
+			//Then we redirect to the index page again
+			redirect('store/index', 'refresh');
+		/*}
+		else {
+			$this->load->view('customer/list.php');
+			if ( !$fileUploadSuccess) {
+				$data['fileerror'] = $this->upload->display_errors();
+				$this->load->view('login/newForm.php',$data);
+				return;
+			}
+			
+			
+		}	
+		*/
+	}
+	
+    	/*
+
+    	$this->load->model('customer_model');
+			
+    	$customer = new Customer();
+		$customer->first = $this->input->get_post('first');
+		$customer->last = $this->input->get_post('last');
+		$customer->login = $this->input->get_post('login');
+		$customer->password = $this->input->get_post('password');
+		$customer->email = $this->input->get_post('email');
+		
+					
+		$this->customer_model->insert($customer);
+
+		loadCustomerAdmin();
+    }
+    */
     
     function loadCustomerAdmin(){
     	$this->load->model('customer_model');
