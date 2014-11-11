@@ -8,7 +8,7 @@
 <?php 
 	echo "<p>" . anchor('store/index','Back to the main page') . "</p>";
 	
-	echo form_open_multipart('store/createLoginForm');
+	echo form_open_multipart('store/logIn');
 		
 	echo form_label('Login'); 
 	echo form_error('login');
@@ -18,14 +18,14 @@
 	echo form_error('password');
 	echo form_input('password',set_value('password'),"required");
 	
-	echo form_submit('submit', 'Create');
+	echo form_submit('submit', 'Login');
 	echo form_close();
 ?>	
 
 <h2>Create a new account</h2>
 
 <?php 
-	echo form_open_multipart('store/createSinginForm');
+	echo form_open_multipart('store/sigIn');
 
 	echo form_label('First Name');
 	echo form_error('first');
@@ -51,6 +51,6 @@
 	echo form_error('email');
 	echo form_input('email',set_value('email'),"required");
 	
-	echo form_submit('submit', 'Create');
+	echo form_submit('submit', 'Sigin');
 	echo form_close();
 ?>

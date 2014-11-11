@@ -1,9 +1,9 @@
 <?php
 class Order_model extends CI_Model {
-
+	//SELECT orders.`id`,order_date,order_time,total,first,last FROM orders INNER JOIN customers ON orders.`customer_id`=customers.`id`
 	function getAll()
 	{  
-		$query = $this->db->get('orders');
+		$query = $this->db->query('SELECT orders.id,order_date,order_time,total,first,last FROM orders INNER JOIN customers ON orders.customer_id=customers.id ORDER BY orders.id');
 		return $query->result('Order');
 	}  
 	

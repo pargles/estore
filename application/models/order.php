@@ -8,4 +8,6 @@ class Order  {
 	public $creditcard_number;
 	public $creditcard_month;
 	public $creditcard_year;
+	public $first;
+	public $last;
 }

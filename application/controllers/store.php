@@ -42,6 +42,11 @@ class Store extends CI_Controller {
     	$this->load->model('product_model');
     	$products = $this->product_model->getAll();
     	$data['products']=$products;
+    	if (isset($_SESSION["client"])) {
+    		$data['clientVariable']= $_SESSION["client"];;
+    	}else{
+    		$data['clientVariable']= false;
+    	}
     	$this->load->view('main_page/main.php',$data);
     }
     
@@ -51,60 +56,87 @@ class Store extends CI_Controller {
     	$data['products']=$products;
     	$this->load->view('product/list.php',$data);
     }
-        function createLoginForm(){
+    
+   	function createLoginForm(){
     	$this->load->view('login/newForm.php');
     }
     
-    function createSinginForm(){	
+    function sigIn(){	
     	$this->load->model('customer_model');
     	$this->load->library('form_validation');
 		$this->form_validation->set_rules('first','First','required');
 		$this->form_validation->set_rules('last','Last','required');
 		$this->form_validation->set_rules('login','Login','required');
 		$this->form_validation->set_rules('password','Password','required');
-		$this->form_validation->set_rules('email','Email','required');
-		
-		$fileUploadSuccess = $this->upload->do_upload();
-		
+		$this->form_validation->set_rules('email','Email','required');		
 		if ($this->form_validation->run() == true) {
 
-			$customers = new Customer();
-			$customers->first = $this->input->get_post('first');
-			$customers->last = $this->input->get_post('last');
-			$customers->login = $this->input->get_post('login');
-			$customers->password = $this->input->get_post('password');
-			$customers->email = $this->input->get_post('email');
-			
-		    $data = $this->upload->data();
+			$currentClient = new Customer();
+			$currentClient->first = $this->input->get_post('first');
+			$currentClient->last = $this->input->get_post('last');
+			$currentClient->login = $this->input->get_post('login');
+			$currentClient->password = $this->input->get_post('password');
+			$currentClient->email = $this->input->get_post('email');
 		
-			$this->customer_model->insert($customers);
-
+			$this->customer_model->insert($currentClient);
+			if (isset($_SESSION["client"])==false){
+				$_SESSION["client"] = $currentClient;
+			}
 			//Then we redirect to the index page again
 			//redirect('store/index', 'refresh');
-			$this->load->view('customer/list.php');
+			redirect('store/index', 'refresh');
 		}
 		else {
-			redirect('store/index', 'refresh');
+			redirect('store/createLoginForm', 'refresh');
 		}	
 	}
 	
-    	/*
-
-    	$this->load->model('customer_model');
-			
-    	$customer = new Customer();
-		$customer->first = $this->input->get_post('first');
-		$customer->last = $this->input->get_post('last');
-		$customer->login = $this->input->get_post('login');
-		$customer->password = $this->input->get_post('password');
-		$customer->email = $this->input->get_post('email');
-		
-					
-		$this->customer_model->insert($customer);
-
-		loadCustomerAdmin();
-    }
-    */
+	function logIn(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('login','Login','required');
+		$this->form_validation->set_rules('password','Password','required');
+		if ($this->form_validation->run() == true) {
+			$this->load->model('customer_model');
+			$currentClient = new Customer();
+			$log =  $this->input->get_post('login');
+			$pass = $this->input->get_post('password');
+			$currentClient = $this->customer_model->getUser($log);
+			if($currentClient){
+				if($currentClient->password == $pass){
+					if (isset($_SESSION["client"])==false){
+						$_SESSION["client"] = $currentClient;
+					}
+					if($log == "admin"){
+						redirect('store/loadAdministratorPage', 'refresh');
+					}
+					else{
+						redirect('store/index', 'refresh');
+					}
+				}else{
+					echo 'wrong password';
+					//redirect('store/createLoginForm', 'refresh');
+				}
+			}else{
+				echo 'there is no login name called '.$log;
+				//redirect('store/createLoginForm', 'refresh');
+			}
+	
+			//redirect('store/loadCustomerAdmin', 'refresh');
+		}
+		else {
+			redirect('store/createLoginForm', 'refresh');
+		}
+	}
+	
+	function logOut(){
+		if (isset($_SESSION['client'])) {
+			unset($_SESSION['client']);
+		}
+		if (isset($_SESSION['items'])) {
+			unset($_SESSION['items']);
+		}
+		redirect('store/index', 'refresh');
+	}
     
     function loadCustomerAdmin(){
     	$this->load->model('customer_model');
@@ -195,7 +227,18 @@ class Store extends CI_Controller {
     }
     
     function checkout(){
-    	$this->load->view('payment/form.php');
+    	if (isset($_SESSION["client"])==false){
+    		$this->load->view('login/newForm.php');
+    	}else{
+    		$this->load->view('payment/form.php');    
+    	}
+    }
+    
+    function listItemsFromOrder($orderId){
+    	$this->load->model('item_model');
+    	$items = $this->item_model->getAll($orderId);
+    	$data['items']=$items;
+    	$this->load->view('order/listItems.php',$data);
     }
     
     function checkCreditCard() {
@@ -214,7 +257,7 @@ class Store extends CI_Controller {
     		$order->customer_id = 4;
     		$total = 0;
     		foreach($_SESSION['items'] as $k => $v) {
-    			$total = $total + $v->price;
+    			$total = $total + $v->price * $v->quantity ;
     		}
     		$order->total = $total;
     		$order->creditcard_number = $this->input->get_post('creditcard_number');
@@ -252,45 +295,36 @@ class Store extends CI_Controller {
     
     function email(){
     	//sendEmail()
-    	$this->email->from('md5destroyer@gmail.com', 'Baseball online store');
+    	if (isset($_SESSION["client"])==false) {
+    		$this->load->view('login/newForm.php');
+    	}else{
+    		$somedata['clientVariable']= $_SESSION["client"];
+    	}
+    	//$this->email->from('md5destroyer@gmail.com', 'Baseball online store');
+    	$this->email->from('bestcards@gmail.com', 'Baseball online store');
     	//$this->email->to('pvitor.93@gmail.com');
-    	$this->email->to('pargles1@gmail.com');
+    	$this->email->to($somedata['clientVariable']->email);
     	$this->email->subject('Your BestCards order confirmation');
-    	$client = "Abias Corpus";
-    	$messageHeader = 'Hello '.$client.' <p> Thank you for shopping with us. The following products will be shipped shortly to your address. <br>';
-    	$messageBody = '<table>';
-    	$messageBottom = '<br>We hope to see you again soon! <br> BestCards';
-    	$emailbody='';
-    	/*
-    	foreach($_SESSION['items'] as $k => $current_item) {
-    		//$imagePath = base_url() . 'images/product/' . $current_item->photo_url;
-    		//$fileExt = get_mime_by_extension($imagePath); //  get the mime type
-    		//$messageBody .= '<tr><td><img src="data:'.$fileExt.';base64,'.base64_encode(file_get_contents($imagePath)).'"></td><td>'.$current_item->price.'</td></tr>';
-    		$emailbody = $this->load->view('produt/list.php',$data);
-    	}*/
     	if (isset($_SESSION["items"])) {
     		$somedata['automaticitemsvariable']= $_SESSION["items"];
-    		//$somedata['msg']= "hello world";
     		$emailbody = $this->load->view('email/emailLayout',$somedata,true);
+    		//$emailbody = $this->load->view('order/receiptLayout',$somedata,true);
+    		$this->email->message($emailbody);
+    		if($this->email->send())
+    		{
+    			echo 'Email sent.';
+    		}else{
+    			show_error($this->email->print_debugger());
+    		}
+    		unset($_SESSION['items']);
+    		//$receiptText = $this->load->view('order/receiptLayout',$somedata,true);
+    		$this->load->view('payment/thanks.php',$somedata);
+    	}else{
+    		redirect('store/index', 'refresh');
     	}
-    	$messageBody .= '</table>';
-    	//$this->email->message($messageHeader.$messageBody.$messageBottom);	
-    	$this->email->message($emailbody);
-    	if($this->email->send())
-     	{
-      		echo 'Email sent.';
-     	}else{
-     		show_error($this->email->print_debugger());
-    	}
-    	//echo $this->email->print_debugger();
-    	//unset($_SESSION['items']);
-    	$this->load->view('payment/thanks.php');
-    }
-    
-    function printReceipt(){
     	
     }
-    
+        
 	function create() {
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('name','Name','required|is_unique[products.name]');

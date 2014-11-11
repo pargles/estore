@@ -12,6 +12,13 @@ class Customer_model extends CI_Model {
 		return $query->row(0,'Customer');
 	}
 	
+	function getUser($login){
+		//$query = $this->db->query('SELECT * FROM customers WHERE login ='."$login");
+		$query = $this->db->get_where('customers',array('login' => $login));
+		return $query->row(0,'Customer');
+		//return $query->result('Customer');
+	}
+	
 	function delete($id) {
 		return $this->db->delete("customers",array('id' => $id ));
 	}

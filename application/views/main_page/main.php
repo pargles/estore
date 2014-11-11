@@ -1,8 +1,13 @@
-<h2>Main page</h2>
 <?php
-	echo "<p>" . anchor('store/loadAdministratorPage','Admin') . "</p>";
+	//echo "<p>" . anchor('store/loadAdministratorPage','Admin') . "</p>";
+	if($clientVariable){
+		echo "<h2>Main page - ". $clientVariable->first."</h2>";
+	}else{
+		echo "<h2>Main page - Client</h2>";
+	}
 	echo "<p>" . anchor('store/loadCart','My Cart') . "</p>";
 	echo "<p>" . anchor('store/createLoginForm','Login') . "</p>";
+	echo "<p>" . anchor('store/logOut','Logout') . "</p>";
 	echo "<table>";
 	echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Photo</th></tr>";
 	

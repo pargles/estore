@@ -1,5 +1,5 @@
 <?php 
-		echo "Hello client <br> Thank you for shopping with us. The following products will be shipped shortly to your address. <br>";
+		echo "Hello " .$clientVariable->first. ",<br><br> Thank you for shopping with us. The following products will be shipped shortly to your address. <br>";
 		echo "<table>";
 		echo "<tr><th>Photo</th><th>Card</th><th>Price</th><th>Quantity</th><th>Total</th></tr>";
 		$sum = 0;
@@ -16,6 +16,6 @@
 		}
 		echo "</table>";
 		echo "<br>Total = $ ".$sum;
-		echo  "<br><br>We hope to see you again soon! <br> BestCards"
+		echo  "<br><br>We hope to see you again soon! <br> BestCards";
 ?>	
 
