@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set('America/New_York');
 class Store extends CI_Controller {
      
      
@@ -56,18 +56,16 @@ class Store extends CI_Controller {
     }
     
     function createSinginForm(){	
-    	$this->load->model('customer_model');
     	$this->load->library('form_validation');
-		$this->form_validation->set_rules('first','First','required');
+    	$this->form_validation->set_rules('first','First','required');
 		$this->form_validation->set_rules('last','Last','required');
 		$this->form_validation->set_rules('login','Login','required');
-		$this->form_validation->set_rules('password','Password','required');
-		$this->form_validation->set_rules('email','Email','required');
-		
-		$fileUploadSuccess = $this->upload->do_upload();
+    	$this->form_validation->set_rules('password','Password','required|min_length[6]||matches[repeat_password]|callback_length_password_check');
+		$this->form_validation->set_rules('repeat_password','Repeat_Password','required');
+		$this->form_validation->set_rules('email','Email','required |valid_email');
 		
 		if ($this->form_validation->run() == true) {
-
+			$this->load->model('customer_model');
 			$customers = new Customer();
 			$customers->first = $this->input->get_post('first');
 			$customers->last = $this->input->get_post('last');
@@ -81,30 +79,21 @@ class Store extends CI_Controller {
 
 			//Then we redirect to the index page again
 			//redirect('store/index', 'refresh');
-			$this->load->view('customer/list.php');
+			$this->load->view('login/newAccountSuccess.php');
 		}
 		else {
-			redirect('store/index', 'refresh');
+			//redirect('store/index', 'refresh');
+			$this->load->view('login/newForm.php');
 		}	
 	}
-	
-    	/*
-
-    	$this->load->model('customer_model');
-			
-    	$customer = new Customer();
-		$customer->first = $this->input->get_post('first');
-		$customer->last = $this->input->get_post('last');
-		$customer->login = $this->input->get_post('login');
-		$customer->password = $this->input->get_post('password');
-		$customer->email = $this->input->get_post('email');
-		
-					
-		$this->customer_model->insert($customer);
-
-		loadCustomerAdmin();
+    
+	public function length_password_check($length_password) {
+    	if (strlen($length_password) < 6 ){
+    		$this->form_validation->set_message('length_password_check', 'Your password must have at least 6 characters long');
+    		return false;
+    	}
+    	return true;
     }
-    */
     
     function loadCustomerAdmin(){
     	$this->load->model('customer_model');

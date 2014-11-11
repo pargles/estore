@@ -15,8 +15,8 @@
 	echo form_input('login',set_value('login'),"required");
 
 	echo form_label('Password');
-	echo form_error('password');
-	echo form_input('password',set_value('password'),"required");
+	echo form_error('login_password');
+	echo form_password('login_password',set_value('login_password'),"required");
 	
 	echo form_submit('submit', 'Create');
 	echo form_close();
@@ -41,11 +41,11 @@
 
 	echo form_label('Password');
 	echo form_error('password');
-	echo form_input('password',set_value('password'),"required");
+	echo form_password('password',set_value('password'),"required");
 	
 	echo form_label('Repeat Password');
-	echo form_error('password');
-	echo form_input('password',set_value('password'),"required");
+	echo form_error('repeat_password');
+	echo form_password('repeat_password',set_value('repeat_password'),"required");
 	
 	echo form_label('Email');
 	echo form_error('email');
