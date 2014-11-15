@@ -14,7 +14,7 @@
 			echo "<td>$ " . $order->total . "</td>";
 			//echo "<td>" . $order->items . "</td>";
 			echo "<td>" . anchor("store/listItemsFromOrder/$order->id",'Items') . "</td>";
-			//echo "<td>" . anchor("store/deleteOrder/$order->id",'Delete',"onClick='return confirm(\"Do you really want to delete this record?\");'") . "</td>";
+			echo "<td>" . anchor("store/deleteOrder/$order->id",'Delete',"onClick='return confirm(\"Do you really want to delete this record?\");'") . "</td>";
 			echo "</tr>";
 		}
 		echo "<table>";

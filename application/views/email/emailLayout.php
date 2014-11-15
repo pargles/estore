@@ -5,7 +5,8 @@
 		$sum = 0;
 		foreach ($automaticitemsvariable as $item) {
 			echo "<tr>";
-			echo "<td><img src='" . base_url() . "images/product/" . $item->photo_url . "' width='100px' /></td>";
+			//echo "<td><img src='".'cid:'. getcwd() . "images/product/" . $item->photo_url . "' border='0' /></td>";
+			echo "<td><img src='" .base_url(). "/images/product/" . $item->photo_url . "' width='100px'/></td>";
 			echo "<td> " . $item->name . "</td>";
 			echo "<td>$ " . $item->price . "</td>";
 			echo "<td> " .$item->quantity . "</td>";

@@ -16,8 +16,8 @@
 
 	echo form_label('Password');
 	echo form_error('password');
-	echo form_input('password',set_value('password'),"required");
-	
+	echo form_password('password',set_value('password'),"required");
+	echo form_hidden('backToTheCart', $back2cart);
 	echo form_submit('submit', 'Login');
 	echo form_close();
 ?>	
@@ -41,7 +41,7 @@
 
 	echo form_label('Password');
 	echo form_error('password');
-	echo form_input('password',set_value('password'),"required");
+	echo form_password('password',set_value('password'),"required");
 	
 	echo form_label('Repeat Password');
 	echo form_error('password');

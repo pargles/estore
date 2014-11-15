@@ -19,6 +19,7 @@ if(!empty($automaticitemsvariable)){
 		echo "</tr>";
 	}
 	echo "<table>";
+	echo "<br>Total: $ ".$sum;
 	echo "<p>" . anchor ( "store/cleanCart", 'Clean my cart' ) . "</p>";
 	echo "<p>" . anchor ( "store/checkout/", 'Check out' ) . "</p>";
 }

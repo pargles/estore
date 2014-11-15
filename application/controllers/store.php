@@ -14,7 +14,7 @@ class Store extends CI_Controller {
 	    	$config['max_width'] = '1024';
 	    	$config['max_height'] = '768';
 */
-	    		    	
+	    	$this->load->helper('file');
 	    	$this->load->library('upload', $config);
 	    	$config['protocol']='smtp';
 	    	$config['smtp_host']='ssl://smtp.googlemail.com';
@@ -58,15 +58,22 @@ class Store extends CI_Controller {
     }
     
    	function createLoginForm(){
-    	$this->load->view('login/newForm.php');
+   		$data['back2cart'] = false;
+    	$this->load->view('login/newForm.php',$data);
     }
     
-    function sigIn(){	
+    function sigIn(){
+   		 if (isset($_SESSION["client"])){
+			unset($_SESSION['client']);
+			if (isset($_SESSION["items"])){
+				unset($_SESSION['items']);
+			}
+		}	
     	$this->load->model('customer_model');
     	$this->load->library('form_validation');
 		$this->form_validation->set_rules('first','First','required');
 		$this->form_validation->set_rules('last','Last','required');
-		$this->form_validation->set_rules('login','Login','required');
+		$this->form_validation->set_rules('login','Login','required|is_unique[customers.login]');
 		$this->form_validation->set_rules('password','Password','required');
 		$this->form_validation->set_rules('email','Email','required');		
 		if ($this->form_validation->run() == true) {
@@ -92,6 +99,12 @@ class Store extends CI_Controller {
 	}
 	
 	function logIn(){
+		if (isset($_SESSION["client"])){
+			unset($_SESSION['client']);
+			if (isset($_SESSION["items"])){
+				unset($_SESSION['items']);
+			}
+		}
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('login','Login','required');
 		$this->form_validation->set_rules('password','Password','required');
@@ -109,16 +122,23 @@ class Store extends CI_Controller {
 					if($log == "admin"){
 						redirect('store/loadAdministratorPage', 'refresh');
 					}
+					elseif ($this->input->get_post('backToTheCart')){
+						redirect('store/checkout', 'refresh');
+					}
 					else{
 						redirect('store/index', 'refresh');
 					}
 				}else{
-					echo 'wrong password';
-					//redirect('store/createLoginForm', 'refresh');
+					echo '<script>';
+					echo 'alert("wrong password")';
+					echo '</script>';
+					redirect('store/createLoginForm', 'refresh');
 				}
 			}else{
-				echo 'there is no login name called '.$log;
-				//redirect('store/createLoginForm', 'refresh');
+				echo '<script>';
+				echo 'alert("this user does not exist")';
+				echo '</script>';
+				redirect('store/createLoginForm', 'refresh');
 			}
 	
 			//redirect('store/loadCustomerAdmin', 'refresh');
@@ -227,10 +247,18 @@ class Store extends CI_Controller {
     }
     
     function checkout(){
-    	if (isset($_SESSION["client"])==false){
-    		$this->load->view('login/newForm.php');
+    	if(isset($_SESSION["items"])==false){
+    		echo '<script>';
+    		echo 'alert("your session has expired")';
+    		echo '</script>';
+    		redirect ( 'store/index', 'refresh' );
     	}else{
-    		$this->load->view('payment/form.php');    
+    		if (isset($_SESSION["client"])==false){
+    			$data['back2cart'] = true;
+    			$this->load->view('login/newForm.php',$data);
+    		}else{
+    			$this->load->view('payment/form.php');
+    		}	
     	}
     }
     
@@ -241,62 +269,71 @@ class Store extends CI_Controller {
     	$this->load->view('order/listItems.php',$data);
     }
     
-    function checkCreditCard() {
-    	$this->load->library('form_validation');
-    	$this->form_validation->set_rules('creditcard_number','Credit Card Number','required|exact_length[16]|numeric');
-    	$this->form_validation->set_rules('creditcard_month','Credit Card Month','required|exact_length[2]|numeric|callback_month_check');
-    	$this->form_validation->set_rules('creditcard_year','Credit Card Year','required|exact_length[4]|numeric|callback_year_check');
     
-    	if ($this->form_validation->run() == true) {
-    		$this->load->model('order_model');
-    		$this->load->model('item_model');
-    		$order = new Order();
-    		//http://php.net/manual/en/function.date.php
-    		$order->order_date = date('Y-m-d');
-    		$order->order_time = date('H:i:s');
-    		$order->customer_id = 4;
-    		$total = 0;
-    		foreach($_SESSION['items'] as $k => $v) {
-    			$total = $total + $v->price * $v->quantity ;
-    		}
-    		$order->total = $total;
-    		$order->creditcard_number = $this->input->get_post('creditcard_number');
-    		$order->creditcard_month = $this->input->get_post('creditcard_month');
-    		$order->creditcard_year = $this->input->get_post('creditcard_year');  
-    		$this->order_model->insert($order);
-    		$orderIdentification =  $this->order_model->insert($order);
-    		
-    		foreach($_SESSION['items'] as $k => $current_item) {
-    			$current_item->order_id = $orderIdentification;
-    			$this->item_model->insert($current_item);
-    		}
-    		redirect('store/email', 'refresh');
+	function checkCreditCard() {
+    	if(isset($_SESSION["items"])==false){
+    		echo '<script>';
+    		echo 'alert("your session has expired")';
+    		echo '</script>';
+    		redirect ( 'store/index', 'refresh' );
     	}
-    	else {    			
-    		$this->load->view('payment/form.php');
-    	}
-    }
-    
-    public function month_check($creditcard_month) {
-    	if ($creditcard_month < date('m') ){
-    		$this->form_validation->set_message('month_check', 'Your credit card has expired');
-    		return false;
-    	}
-    	return true;
-    }
-    
-    public function year_check($creditcard_year) {
-    	if ($creditcard_year < date('Y') ){
-    		$this->form_validation->set_message('year_check', 'Your credit card has expired');
-    		return false;
-    	}
-    	return true;
-    }
+    	else
+		{
+			$this->load->library ( 'form_validation' );
+			$this->form_validation->set_rules ( 'creditcard_number', 'Credit Card Number', 'required|exact_length[16]|numeric' );
+			$this->form_validation->set_rules ( 'creditcard_month', 'Credit Card Month', 'required|exact_length[2]|numeric' );
+			$this->form_validation->set_rules ( 'creditcard_year', 'Credit Card Year', 'required|exact_length[4]|numeric' );
+			
+			if ($this->form_validation->run () == true) {
+				if($this->input->get_post ( 'creditcard_year' ) < date ( 'Y' ) ){
+					redirect ( 'store/expiredCreditCard', 'refresh' );
+				}
+				if($this->input->get_post ( 'creditcard_year' ) == date ( 'Y' ) ){
+					if($this->input->get_post ( 'creditcard_month' ) < date ( 'm' )){
+						redirect ( 'store/expiredCreditCard', 'refresh' );
+					}
+				}
+				$this->load->model ( 'order_model' );
+				$this->load->model ( 'item_model' );
+				$order = new Order ();
+				// http://php.net/manual/en/function.date.php
+				$order->order_date = date ( 'Y-m-d' );
+				$order->order_time = date ( 'H:i:s' );
+				$order->customer_id = $_SESSION["client"]->id;
+				$total = 0;
+				foreach ( $_SESSION ['items'] as $k => $v ) {
+					$total = $total + $v->price * $v->quantity;
+				}
+				$order->total = $total;
+				$order->creditcard_number = $this->input->get_post ( 'creditcard_number' );
+				$order->creditcard_month = $this->input->get_post ( 'creditcard_month' );
+				$order->creditcard_year = $this->input->get_post ( 'creditcard_year' );
+				$orderIdentification = $this->order_model->insert ( $order );
+				
+				foreach ( $_SESSION ['items'] as $k => $current_item ) {
+					$current_item->order_id = $orderIdentification;
+					$this->item_model->insert ( $current_item );
+				}
+				redirect ( 'store/email', 'refresh' );
+			} else {
+				$this->load->view ( 'payment/form.php' );
+			}
+		}
+	}
+	
+	function expiredCreditCard(){
+		echo '<script>';
+		echo 'alert("your credit card has expired")';
+		echo '</script>';
+		redirect ( 'store/checkout', 'refresh' );
+	}
+  
     
     function email(){
     	//sendEmail()
     	if (isset($_SESSION["client"])==false) {
-    		$this->load->view('login/newForm.php');
+    		$data['back2cart'] = false;
+    		$this->load->view('login/newForm.php',$data);
     	}else{
     		$somedata['clientVariable']= $_SESSION["client"];
     	}
@@ -309,6 +346,12 @@ class Store extends CI_Controller {
     		$somedata['automaticitemsvariable']= $_SESSION["items"];
     		$emailbody = $this->load->view('email/emailLayout',$somedata,true);
     		//$emailbody = $this->load->view('order/receiptLayout',$somedata,true);
+    		/*foreach($_SESSION['items'] as $k => $v) {
+    			echo getcwd() . "/images/product/" . $v->photo_url,'inline';
+    			$this->email->attach(getcwd() . "/images/product/" . $v->photo_url,"inline");
+    			//echo getcwd();
+    		}*/
+    		
     		$this->email->message($emailbody);
     		if($this->email->send())
     		{
@@ -320,6 +363,9 @@ class Store extends CI_Controller {
     		//$receiptText = $this->load->view('order/receiptLayout',$somedata,true);
     		$this->load->view('payment/thanks.php',$somedata);
     	}else{
+    		echo '<script>';
+    		echo 'alert("your session has expired")';
+    		echo '</script>';
     		redirect('store/index', 'refresh');
     	}
     	
@@ -410,7 +456,7 @@ class Store extends CI_Controller {
 			$this->product_model->delete($id);
 		
 		//Then we redirect to the index page again
-		redirect('store/index', 'refresh');
+		redirect('store/loadProductAdmin', 'refresh');
 	}
 	
 	function deleteCustomer($id) {
@@ -420,7 +466,14 @@ class Store extends CI_Controller {
 			$this->customer_model->delete($id);
 	
 		//Then we redirect to the index page again
-		redirect('store/index', 'refresh');
+		redirect('store/loadCustomerAdmin', 'refresh');
+	}
+	
+	function deleteOrder($id){
+		$this->load->model('order_model');
+		if (isset($id))
+			$this->order_model->delete($id);
+		redirect('store/loadOrderAdmin', 'refresh');
 	}
       
    
