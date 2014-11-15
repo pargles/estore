@@ -355,7 +355,7 @@ class Store extends CI_Controller {
     		$this->email->message($emailbody);
     		if($this->email->send())
     		{
-    			echo 'Email sent.';
+    			//echo 'Email sent.';
     		}else{
     			show_error($this->email->print_debugger());
     		}

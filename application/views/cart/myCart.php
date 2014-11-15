@@ -17,7 +17,7 @@
 echo "<div id='nav'>";
 echo "<p class='link'>" . anchor ( 'store/index', 'Back to the store' ) . "</p>";
 echo "<p class='link'>" . anchor ( "store/cleanCart", 'Clean my cart' ) . "</p>";
-echo "<p class='link'>" . anchor ( "store/checkout/", 'Check out' ) . "</p>";
+//echo "<p class='link'>" . anchor ( "store/checkout/", 'Check out' ) . "</p>";
 echo "</div>";
 
 echo "<div id='main_cart'>";
@@ -41,15 +41,12 @@ if(!empty($automaticitemsvariable)){
 		echo "</tr>";
 	}
 	echo "<table>";
-<<<<<<< HEAD
+	
 	echo "</div>";
-=======
-	echo "<br>Total: $ ".$sum;
+	echo "<br>Total: $ ".$sum;	
 	echo "<p>" . anchor ( "store/cleanCart", 'Clean my cart' ) . "</p>";
 	echo "<p>" . anchor ( "store/checkout/", 'Check out' ) . "</p>";
->>>>>>> ca031c67dc5704c0433b2132de86f1b5506411c8
-}
- else {
+}else {
 	echo "<img id='empty_cart_img' src='../../images/style/empty_cart.png'>";	
 }
 ?>

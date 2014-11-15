@@ -24,8 +24,8 @@
 	echo form_input('login',set_value('login'),"required");
 
 	echo form_label('<p class="words">Password</p>');
-	echo form_error('login_password');
-	echo form_password('login_password',set_value('password'),"required");
+	echo form_error('password');
+	echo form_password('password',set_value('password'),"required");
 	echo form_hidden('backToTheCart', $back2cart);
 	
 	echo form_submit('submit', 'Login');

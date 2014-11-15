@@ -19,6 +19,8 @@
 echo "<div id='main'>";
 echo "<h1 class='words'>Order Concluded</h1>";
 echo "<p class='words'> Thanks for the preference </p>";
+echo "<p class='words'>" . anchor ( 'store/index', 'Back to the store' ) . "</p>";
+echo '<input type="button" value="Show Receipt" onclick="openWin()" />';
 echo "</div>";
 
 echo "<div id='nav_thanks'>";
@@ -27,11 +29,9 @@ echo "<p class='link'>" . anchor ( 'store/printReceipt', 'print my receipt' ) . 
 echo "</div>";
 ?>
 <body>
-	<h2>Order Concluded</h2>
 
 <?php
-echo "<p> Thanks for the preference </p>";
-echo "<p>" . anchor ( 'store/index', 'Back to the store' ) . "</p>";
+
 $message = "Thanks for your order, " .$clientVariable->first. "<br><br>";
 $message = $message."Order Details: <br><br>";
 $message = $message. "email address: ".$clientVariable->email. "<br><br>";
@@ -53,7 +53,7 @@ $message = $message. "</table>";
 $message = $message. "<br>Total for this order: $ ".$sum."<br><br>";
 
 $message = $message. "<input type='button' value='Print Receipt' onclick='print()' />";
-echo '<input type="button" value="Show Receipt" onclick="openWin()" />';
+
 echo "<script>
 	var myWindow;
 	function openWin()
