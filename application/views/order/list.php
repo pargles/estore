@@ -32,7 +32,7 @@
 			echo "<td class='product'>" . $order->order_time . "</td>";
 			echo "<td class='product'>" . $order->total . "</td>";
 			//echo "<td>" . $order->items . "</td>";
-			echo "<td class='product'>" . anchor("store/editForm/",'Items') . "</td>";
+			echo "<td>" . anchor("store/listItemsFromOrder/$order->id",'Items') . "</td>";
 			echo "<td class='product'>" . anchor("store/deleteOrder/$order->id",'Delete',"onClick='return confirm(\"Do you really want to delete this record?\");'") . "</td>";
 			echo "</tr>";
 		}
