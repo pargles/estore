@@ -243,7 +243,7 @@ class Store extends CI_Controller {
     	//sendEmail()
     	$this->email->from('md5destroyer@gmail.com', 'Baseball online store');
     	//$this->email->to('pvitor.93@gmail.com');
-    	$this->email->to('pargles1@gmail.com');
+    	$this->email->to('pargles1234@gmail.com');
     	$this->email->subject('Your BestCards order confirmation');
     	$client = "Abias Corpus";
     	$messageHeader = 'Hello '.$client.' <p> Thank you for shopping with us. The following products will be shipped shortly to your address. <br>';
@@ -265,12 +265,12 @@ class Store extends CI_Controller {
     	$messageBody .= '</table>';
     	//$this->email->message($messageHeader.$messageBody.$messageBottom);	
     	$this->email->message($emailbody);
-    	if($this->email->send())
-     	{
-      		echo 'Email sent.';
-     	}else{
-     		show_error($this->email->print_debugger());
-    	}
+    	//if($this->email->send())
+     	//{
+      	//	echo 'Email sent.';
+     	//}else{
+     	//	show_error($this->email->print_debugger());
+    	//}
     	//echo $this->email->print_debugger();
     	//unset($_SESSION['items']);
     	$this->load->view('payment/thanks.php');

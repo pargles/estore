@@ -1,56 +1,71 @@
-<h2>Login</h2>
-
-<style>
-	input { display: block;}
-	
-</style>
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Login/New User</title>
+	<link rel="stylesheet" href="<?php echo base_url('css/template.css'); ?>" />
+</head>
+<body>
+<header id="header">
+	<h2>Baseball Cards Store</h2>
+	<img id="mlbimage" src="../../images/style/mlb.png">
+	<img id="brasilimage" src="../../images/style/brasil.png">
+</header>
+<img id="bgimage" src="../../images/style/3.png">
 
 <?php 
-	echo "<p>" . anchor('store/index','Back to the main page') . "</p>";
-	
+	echo "<div id='nav'>";
+	echo "<p class='link'>" . anchor('store/index','Back to the store') . "</p>";
+	echo "</div>";
 	echo form_open_multipart('store/createLoginForm');
-		
-	echo form_label('Login'); 
+
+	echo "<div id='main'>";
+	echo form_label('<p class="words">Login</p>'); 
 	echo form_error('login');
 	echo form_input('login',set_value('login'),"required");
 
-	echo form_label('Password');
+	echo form_label('<p class="words">Password</p>');
 	echo form_error('login_password');
 	echo form_password('login_password',set_value('login_password'),"required");
 	
-	echo form_submit('submit', 'Create');
+	echo form_submit('submit', 'Login');
 	echo form_close();
+	echo "</div>";
 ?>	
 
-<h2>Create a new account</h2>
+<h1 id="newacount">Create a new account</h1>
 
 <?php 
 	echo form_open_multipart('store/createSinginForm');
-
-	echo form_label('First Name');
+	
+	echo "<div id='main'>";
+	echo form_label('<p class="words">First Name</p>');
 	echo form_error('first');
 	echo form_input('first',set_value('first'),"required");		
 	
-	echo form_label('Last Name');
+	echo form_label('<p class="words">Last Name</p>');
 	echo form_error('last');
 	echo form_input('last', set_value('last'),"required");
 	
-	echo form_label('Login');
+	echo form_label('<p class="words">Login</p>');
 	echo form_error('login');
 	echo form_input('login',set_value('login'),"required");
 
-	echo form_label('Password');
+	echo form_label('<p class="words">Password</p>');
 	echo form_error('password');
 	echo form_password('password',set_value('password'),"required");
 	
-	echo form_label('Repeat Password');
+	echo form_label('<p class="words">Repeat Password</p>');
 	echo form_error('repeat_password');
 	echo form_password('repeat_password',set_value('repeat_password'),"required");
 	
-	echo form_label('Email');
+	echo form_label('<p class="words">Email</p>');
 	echo form_error('email');
 	echo form_input('email',set_value('email'),"required");
 	
 	echo form_submit('submit', 'Create');
 	echo form_close();
+	echo "</div>";
 ?>
+</body>
+</html>
