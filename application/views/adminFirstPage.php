@@ -14,6 +14,7 @@
 <img id="bgimage" src="../../images/style/3.png">
 
 <?php
+<<<<<<< HEAD
 	echo "<div id='nav_admin'>";
 	echo "<p class='link'>" . anchor('store/index','Back to the store') . "</p>";
 	echo "<p class='link'>" . anchor('store/loadProductAdmin','Products') . "</p>";
@@ -31,3 +32,10 @@
 </html>
 
 	
+=======
+	echo "<p>" . anchor('store/index','Main page') . "</p>";
+	echo "<p>" . anchor('store/loadProductAdmin','Products') . "</p>";
+	echo "<p>" . anchor('store/loadOrderAdmin','Orders') . "</p>";
+	echo "<p>" . anchor('store/loadCustomerAdmin','Customers') . "</p>";
+?>
+>>>>>>> ca031c67dc5704c0433b2132de86f1b5506411c8

@@ -1,9 +1,9 @@
 <?php
 class Item_model extends CI_Model {
-
-	function getAll()
+	//SELECT * FROM `order_items` INNER JOIN `products` ON order_items.`product_id`=products.`id` WHERE `order_id`=68
+	function getAll($orderId)
 	{  
-		$query = $this->db->get('order_items');
+		$query = $this->db->query('SELECT * FROM order_items INNER JOIN products ON order_items.product_id=products.id WHERE order_id='.$orderId.'');
 		return $query->result('Item');
 	}  
 	

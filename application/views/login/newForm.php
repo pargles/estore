@@ -17,8 +17,7 @@
 	echo "<div id='nav'>";
 	echo "<p class='link'>" . anchor('store/index','Back to the store') . "</p>";
 	echo "</div>";
-	echo form_open_multipart('store/createLoginForm');
-
+	echo form_open_multipart('store/logIn');
 	echo "<div id='main'>";
 	echo form_label('<p class="words">Login</p>'); 
 	echo form_error('login');
@@ -26,7 +25,8 @@
 
 	echo form_label('<p class="words">Password</p>');
 	echo form_error('login_password');
-	echo form_password('login_password',set_value('login_password'),"required");
+	echo form_password('login_password',set_value('password'),"required");
+	echo form_hidden('backToTheCart', $back2cart);
 	
 	echo form_submit('submit', 'Login');
 	echo form_close();
@@ -36,10 +36,16 @@
 <h1 id="newacount">Create a new account</h1>
 
 <?php 
+
 	echo form_open_multipart('store/createSinginForm');
 	
 	echo "<div id='main'>";
 	echo form_label('<p class="words">First Name</p>');
+
+	echo form_open_multipart('store/sigIn');
+
+	echo form_label('First Name');
+
 	echo form_error('first');
 	echo form_input('first',set_value('first'),"required");		
 	
@@ -63,7 +69,7 @@
 	echo form_error('email');
 	echo form_input('email',set_value('email'),"required");
 	
-	echo form_submit('submit', 'Create');
+	echo form_submit('submit', 'Sigin');
 	echo form_close();
 	echo "</div>";
 ?>

@@ -41,7 +41,13 @@ if(!empty($automaticitemsvariable)){
 		echo "</tr>";
 	}
 	echo "<table>";
+<<<<<<< HEAD
 	echo "</div>";
+=======
+	echo "<br>Total: $ ".$sum;
+	echo "<p>" . anchor ( "store/cleanCart", 'Clean my cart' ) . "</p>";
+	echo "<p>" . anchor ( "store/checkout/", 'Check out' ) . "</p>";
+>>>>>>> ca031c67dc5704c0433b2132de86f1b5506411c8
 }
  else {
 	echo "<img id='empty_cart_img' src='../../images/style/empty_cart.png'>";	

@@ -23,7 +23,7 @@
 		echo "<div id='main'>";
  	  	echo "<h1 class='words'>Order Table</h1>";
 		echo "<table>";
-		echo "<tr><th>Customer</th><th>Date</th><th>Time</th><th>Total</th></tr>";
+		echo "<tr><th>Order Id</th><th>Customer</th><th>Date</th><th>Time</th><th>Total</th></tr>";
 		
 		foreach ($orders as $order) {
 			echo "<tr>";

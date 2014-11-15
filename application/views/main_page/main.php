@@ -14,10 +14,15 @@
 <img id="bgimage" src="../../images/style/3.png">
 
 	<?php
+	if($clientVariable){
+		echo "<h2>Main page - ". $clientVariable->first."</h2>";
+	}else{
+		echo "<h2>Main page - Client</h2>";
+	}
 	echo "<div id='nav'>";
-	echo "<p class='link'>" . anchor('store/loadAdministratorPage','Admin') . "</p>";
 	echo "<p class='link'>" . anchor('store/loadCart','My Cart') . "</p>";
 	echo "<p class='link'>" . anchor('store/createLoginForm','Login') . "</p>";
+	echo "<p class='link'>" . anchor('store/logOut','Logout') . "</p>";
 	echo "</div>";
 	
 	echo "<div id='main'>";
