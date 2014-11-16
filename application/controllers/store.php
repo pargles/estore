@@ -69,15 +69,18 @@ class Store extends CI_Controller {
 				unset($_SESSION['items']);
 			}
 		}	
-    	$this->load->model('customer_model');
+    	
     	$this->load->library('form_validation');
-		$this->form_validation->set_rules('first','First','required');
+		
+    	$this->form_validation->set_rules('first','First','required');
 		$this->form_validation->set_rules('last','Last','required');
 		$this->form_validation->set_rules('login','Login','required|is_unique[customers.login]');
-		$this->form_validation->set_rules('password','Password','required');
-		$this->form_validation->set_rules('email','Email','required');		
+		$this->form_validation->set_rules('password','Password','required|min_length[6]||matches[repeat_password]|callback_length_password_check');
+		$this->form_validation->set_rules('repeat_password','Repeat_Password','required');
+		$this->form_validation->set_rules('email','Email','required |valid_email');
+		
 		if ($this->form_validation->run() == true) {
-
+			$this->load->model('customer_model');
 			$currentClient = new Customer();
 			$currentClient->first = $this->input->get_post('first');
 			$currentClient->last = $this->input->get_post('last');
@@ -92,10 +95,20 @@ class Store extends CI_Controller {
 			//Then we redirect to the index page again
 			//redirect('store/index', 'refresh');
 			redirect('store/index', 'refresh');
+			
 		}
 		else {
 			redirect('store/createLoginForm', 'refresh');
-		}	
+		}
+			
+	}
+	
+	public function length_password_check($length_password) {
+    	if (strlen($length_password) < 6 ){
+    		$this->form_validation->set_message('length_password_check', 'Your password must have at least 6 characters long');
+    		return false;
+    	}
+    	return true;
 	}
 	
 	function logIn(){
@@ -476,4 +489,3 @@ class Store extends CI_Controller {
 		redirect('store/loadOrderAdmin', 'refresh');
 	}   
 }
-

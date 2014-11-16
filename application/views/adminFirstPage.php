@@ -14,17 +14,12 @@
 <img id="bgimage" src="../../images/style/3.png">
 
 <?php
-
-	echo "<div id='nav_admin'>";
-	echo "<p class='link'>" . anchor('store/index','Back to the store') . "</p>";
-	echo "<p class='link'>" . anchor('store/loadProductAdmin','Products') . "</p>";
-	echo "<p class='link'>" . anchor('store/loadOrderAdmin','Orders') . "</p>";
-	echo "<p class='link'>" . anchor('store/loadCustomerAdmin','Customers') . "</p>";
-	echo "</div>";
-	
 	echo "<div id='main'>";
 	echo "<h1 class='words'>Administrator page</h1>";
-	echo "<h1 class='words'><-- Choose one option</h1>";
+		echo "<p class='link_admin'>" . anchor('store/index','Back to the store') . "</p>";
+	echo "<p class='link_admin'>" . anchor('store/loadProductAdmin','Products') . "</p>";
+	echo "<p class='link_admin'>" . anchor('store/loadOrderAdmin','Orders') . "</p>";
+	echo "<p class='link_admin'>" . anchor('store/loadCustomerAdmin','Customers') . "</p>";
 	echo "</div>";
 ?>
 

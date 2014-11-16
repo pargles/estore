@@ -37,15 +37,12 @@
 
 <?php 
 
-	echo form_open_multipart('store/createSinginForm');
 	
 	echo "<div id='main'>";
-	echo form_label('<p class="words">First Name</p>');
-
+	
 	echo form_open_multipart('store/sigIn');
 
-	echo form_label('First Name');
-
+	echo form_label('<p class="words">First Name</p>');
 	echo form_error('first');
 	echo form_input('first',set_value('first'),"required");		
 	

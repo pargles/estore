@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,17 +15,14 @@
 
 
 <?php
-echo "<div id='main'>";
+echo "<div id='main_success'>";
 echo "<h1 class='words'>Order Concluded</h1>";
 echo "<p class='words'> Thanks for the preference </p>";
+echo "<p class='words'> An e-mail with details of your purchase was sent</p>";
 echo "<p class='words'>" . anchor ( 'store/index', 'Back to the store' ) . "</p>";
 echo '<input type="button" value="Show Receipt" onclick="openWin()" />';
 echo "</div>";
 
-echo "<div id='nav_thanks'>";
-echo "<p class='link'>" . anchor ( 'store/index', 'Back to the store' ) . "</p>";
-echo "<p class='link'>" . anchor ( 'store/printReceipt', 'print my receipt' ) . "</p>";
-echo "</div>";
 ?>
 <body>
 

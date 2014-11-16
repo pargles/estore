@@ -17,7 +17,7 @@
 <?php 
 	echo "<div id='nav'>";
 	echo "<p class='link'>" . anchor('store/index','Back to the store') . "</p>";
-	echo "<p class='link'>" . anchor('store/loadOrderAdmin','Back') . "</p>";
+	echo "<p class='link'>" . anchor('store/loadProductAdmin','Back') . "</p>";
 	echo "</div>";
 	
 	echo "<div id='main'>";
