@@ -232,8 +232,9 @@ class Store extends CI_Controller {
     function cleanCart(){
     	if (isset($_SESSION['items'])) {
     		unset($_SESSION['items']);
-    		redirect('store/loadCart', 'refresh');
+    		
     	}
+    	redirect('store/loadCart', 'refresh');
     }
     
     function deleteItemFromSession($product_id){
@@ -406,7 +407,7 @@ class Store extends CI_Controller {
 			$this->product_model->insert($product);
 
 			//Then we redirect to the index page again
-			redirect('store/index', 'refresh');
+			redirect('store/loadProductAdmin', 'refresh');
 		}
 		else {
 			if ( !$fileUploadSuccess) {

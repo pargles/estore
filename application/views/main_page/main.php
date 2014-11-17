@@ -36,7 +36,7 @@
 		echo "<tr>";
 		echo "<td class='product'>" . $product->name . "</td>";
 		echo "<td class='product'>" . $product->description . "</td>";
-		echo "<td class='product'>" . $product->price . "</td>";
+		echo "<td class='product'>$ " . $product->price . "</td>";
 		echo "<td class='product'><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";
 		echo "<td class='product'>" . anchor("store/buyItem/$product->id",'Buy') . "</td>";
 		echo "</tr>";

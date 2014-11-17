@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Login/New User</title>
 	<link rel="stylesheet" href="<?php echo base_url('css/template.css'); ?>" />
+	<script src="js/jquery.js"></script>
 </head>
 <body>
 <header id="header">
@@ -14,6 +15,7 @@
 <img id="bgimage" src="../../images/style/3.png">
 
 <?php 
+echo validation_errors();
 	echo "<div id='nav'>";
 	echo "<p class='link'>" . anchor('store/index','Back to the store') . "</p>";
 	echo "</div>";
@@ -53,6 +55,7 @@
 	echo form_label('<p class="words">Login</p>');
 	echo form_error('login');
 	echo form_input('login',set_value('login'),"required");
+	////echo form_password('password',set_value('login'),"required pattern='.{6,}' required title='6 characters minimum'");
 
 	echo form_label('<p class="words">Password</p>');
 	echo form_error('password');
