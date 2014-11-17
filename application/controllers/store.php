@@ -75,9 +75,9 @@ class Store extends CI_Controller {
     	$this->form_validation->set_rules('first','First','required');
 		$this->form_validation->set_rules('last','Last','required');
 		$this->form_validation->set_rules('login','Login','required|is_unique[customers.login]');
-		$this->form_validation->set_rules('password','Password','required|min_length[6]||matches[repeat_password]|callback_length_password_check');
+		$this->form_validation->set_rules('password','Password','required|min_length[6]|matches[repeat_password]|callback_length_password_check');
 		$this->form_validation->set_rules('repeat_password','Repeat_Password','required');
-		$this->form_validation->set_rules('email','Email','required |valid_email');
+		$this->form_validation->set_rules('email','Email','required|valid_email');
 		
 		if ($this->form_validation->run() == true) {
 			$this->load->model('customer_model');
@@ -98,7 +98,8 @@ class Store extends CI_Controller {
 			
 		}
 		else {
-			redirect('store/createLoginForm', 'refresh');
+			$data['back2cart'] = false;
+			$this->load->view('login/newForm.php',$data);
 		}
 			
 	}
@@ -119,13 +120,13 @@ class Store extends CI_Controller {
 			}
 		}
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('login','Login','required');
-		$this->form_validation->set_rules('password','Password','required');
+		$this->form_validation->set_rules('login1','Login','required');
+		$this->form_validation->set_rules('password1','Password','required');
 		if ($this->form_validation->run() == true) {
 			$this->load->model('customer_model');
 			$currentClient = new Customer();
-			$log =  $this->input->get_post('login');
-			$pass = $this->input->get_post('password');
+			$log =  $this->input->get_post('login1');
+			$pass = $this->input->get_post('password1');
 			$currentClient = $this->customer_model->getUser($log);
 			if($currentClient){
 				if($currentClient->password == $pass){
