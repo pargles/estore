@@ -57,7 +57,7 @@ echo validation_errors();
 	
 	echo "<div id='main'>";
 	
-	echo form_open_multipart('store/sigIn','novalidate');
+	echo form_open_multipart('store/sigIn');
 
 	echo form_label('<p class="words">First Name</p>');
 	echo form_error('first');
