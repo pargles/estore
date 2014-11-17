@@ -449,7 +449,7 @@ class Store extends CI_Controller {
 			$this->load->model('product_model');
 			$this->product_model->update($product);
 			//Then we redirect to the index page again
-			redirect('store/index', 'refresh');
+			redirect('store/loadProductAdmin', 'refresh');
 		}
 		else {
 			$product = new Product();

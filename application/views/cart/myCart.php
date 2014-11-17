@@ -32,9 +32,9 @@ if(!empty($automaticitemsvariable)){
 		echo "<td class='product'><img src='" . base_url () . "images/product/" . $item->photo_url . "' width='100px' /></td>";
 		echo "<td class='product'>" . $item->name . "</td>";
 		echo "<td class='product'>" . $item->quantity . "</td>";
-		echo "<td class='product'>" . $item->price . "</td>";
+		echo "<td class='product'>$ " . $item->price . "</td>";
 		$sum = $sum +  $item->price * $item->quantity;
-		echo "<td class='product'>" .$item->price * $item->quantity. "</td>";
+		echo "<td class='product'>$ " .$item->price * $item->quantity. "</td>";
 		echo "<td class='product'>" . anchor ( "store/increaseProductQuantity/$item->product_id", 'Increase' ) . "</td>";
 		echo "<td class='product'>" . anchor ( "store/decreaseProductQuantity/$item->product_id", 'Decrease' ) . "</td>";
 		echo "<td class='product'>" . anchor ( "store/deleteItemFromSession/$item->product_id", 'Delete' ) . "</td>";

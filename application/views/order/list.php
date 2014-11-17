@@ -27,7 +27,7 @@
 		
 		foreach ($orders as $order) {
 			echo "<tr>";
-			echo "<td class='product'>" . $order->customer_id . "</td>";
+			echo "<td class='product'>" . $order->id . "</td>";
 			echo "<td class='product'>" . $order->order_date . "</td>";
 			echo "<td class='product'>" . $order->order_time . "</td>";
 			echo "<td class='product'>" . $order->total . "</td>";
