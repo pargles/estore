@@ -45,7 +45,7 @@ if(!empty($automaticitemsvariable)){
 	echo "</div>";
 	echo "<br>Total: $ ".$sum;	
 	echo "<p class='link'>" . anchor ( "store/cleanCart", 'Clean my cart' ) . "</p>";
-	echo "<p class='link'>" . anchor ( "store/checkout/", 'Check out' ) . "</p>";
+	echo "<p class='link'>" . anchor ( "store/checkout", 'Check out' ) . "</p>";
 }else {
 	echo "<img id='empty_cart_img' src='../../images/style/empty_cart.png'>";	
 }

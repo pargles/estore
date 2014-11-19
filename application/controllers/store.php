@@ -64,9 +64,9 @@ class Store extends CI_Controller {
     
     function sigIn(){
    		 if (isset($_SESSION["client"])){
-			unset($_SESSION['client']);
+			unset($_SESSION["client"]);
 			if (isset($_SESSION["items"])){
-				unset($_SESSION['items']);
+				unset($_SESSION["items"]);
 			}
 		}	
     	
@@ -88,7 +88,8 @@ class Store extends CI_Controller {
 			$currentClient->password = $this->input->get_post('password');
 			$currentClient->email = $this->input->get_post('email');
 		
-			$this->customer_model->insert($currentClient);
+			$customerId = $this->customer_model->insert($currentClient);
+			$currentClient->id = $customerId;
 			if (isset($_SESSION["client"])==false){
 				$_SESSION["client"] = $currentClient;
 			}
@@ -315,6 +316,7 @@ class Store extends CI_Controller {
 				$order->order_date = date ( 'Y-m-d' );
 				$order->order_time = date ( 'H:i:s' );
 				$order->customer_id = $_SESSION["client"]->id;
+				
 				$total = 0;
 				foreach ( $_SESSION ['items'] as $k => $v ) {
 					$total = $total + $v->price * $v->quantity;
@@ -324,7 +326,6 @@ class Store extends CI_Controller {
 				$order->creditcard_month = $this->input->get_post ( 'creditcard_month' );
 				$order->creditcard_year = $this->input->get_post ( 'creditcard_year' );
 				$orderIdentification = $this->order_model->insert ( $order );
-				
 				foreach ( $_SESSION ['items'] as $k => $current_item ) {
 					$current_item->order_id = $orderIdentification;
 					$this->item_model->insert ( $current_item );

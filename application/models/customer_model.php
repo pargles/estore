@@ -24,11 +24,11 @@ class Customer_model extends CI_Model {
 	}
 	
 	function insert($customer) {
-		return $this->db->insert("customers", array('first' => $customer->first,
+		return ($this->db->insert("customers", array('first' => $customer->first,
 				                                  'last' => $customer->last,
 											      'login' => $customer->login,
 												  'password' => $customer->password,
-												  'email'=> $customer->email));
+												  'email'=> $customer->email))?$this->db->insert_id():false);
 	}	
 }
 ?>
